@@ -1,3 +1,5 @@
-export interface AppState {
+import {Todos} from "./todo.model";
 
+export interface AppState {
+    todos: Todos;
 }
