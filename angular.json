@@ -109,5 +109,8 @@
       }
     }
   },
-  "defaultProject": "ngrx-todolist"
+  "defaultProject": "ngrx-todolist",
+  "cli": {
+    "analytics": "a72558e1-6cb4-4bf5-b6f0-89a10945b1de"
+  }
 }
