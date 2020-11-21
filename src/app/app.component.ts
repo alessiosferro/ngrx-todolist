@@ -1,32 +1,98 @@
-import { Component } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
+import {Observable} from "rxjs";
+import {Todo} from "./model";
+import {select, Store} from "@ngrx/store";
+import {AppState} from "./model/app-state.model";
+import {selectCompletedTodosCount, selectCurrentTodoId, selectTodos} from "./state/todos/todos.selectors";
+import {AddTodo, DeleteTodo, LoadTodos, SelectTodo, UpdateTodo} from "./state/todos/todos.actions";
+import {filter, pluck} from "rxjs/operators";
 
 @Component({
-  selector: 'app-root',
-  template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
-      <span style="display: block">{{ title }} app is running!</span>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-    </div>
-    <h2>Here are some links to help you start: </h2>
-    <ul>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-      </li>
-    </ul>
-    
-  `,
-  styles: []
+    selector: 'app-root',
+    template: `
+        <ul>
+            <li *ngFor="let todo of todos$ | async">
+                <ng-container *ngIf="(selectedTodoId$ | async) === todo.id; else showTodo">
+                    <form (ngSubmit)="updateTodo({ id: todo.id, title: editInput.value, completed: completed.checked })">
+                        <input #editInput type="text" name="title" [ngModel]="todo.title"/>
+                        <input #completed name="completed" type="checkbox" [ngModel]="todo.completed"/>
+                        <button>Edit</button>
+                    </form>
+                </ng-container>
+                <ng-template #showTodo>
+                    <a href="#"
+                       (click)="selectTodo(todo.id)"
+                       [ngStyle]="{ textDecoration: todo.completed ? 'line-through' : 'none'}"
+                    >{{ todo.title }}</a>
+                    <button (click)="deleteTodo(todo.id)">Delete</button>
+                </ng-template>
+            </li>
+        </ul>
+        <h3>Todos completed: {{ completedTodosCount$ | async }}</h3>
+        <form (ngSubmit)="addTodo(input.value.trim()); input.value = ''">
+            <input type="text" name="todoTitle" #input/>
+            <button>Submit</button>
+        </form>
+    `,
+    styles: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {
-  title = 'ngrx-todolist';
+export class AppComponent implements OnInit, AfterViewInit {
+    @ViewChildren('editInput')
+    editInput: QueryList<HTMLInputElement>;
+
+    todos$: Observable<Todo[]>;
+    selectedTodoId$: Observable<string | null>;
+    completedTodosCount$: Observable<number>;
+
+    constructor(
+        private store: Store<AppState>
+    ) {
+    }
+
+    ngOnInit() {
+        this.store.dispatch(new LoadTodos());
+
+        this.todos$ = this.store.pipe(
+            select(selectTodos)
+        );
+
+        this.selectedTodoId$ = this.store.pipe(
+            select(selectCurrentTodoId)
+        );
+
+        this.completedTodosCount$ = this.store.pipe(
+            select(selectCompletedTodosCount)
+        );
+    }
+
+    ngAfterViewInit() {
+        this.editInput.changes.pipe(
+            pluck('first', 'nativeElement'),
+            filter(el => !!el)
+        ).subscribe(el => el.focus());
+    }
+
+    addTodo(title: string): void {
+        this.store.dispatch(new AddTodo(title));
+    }
+
+    selectTodo(todoId: string): void {
+        this.store.dispatch(new SelectTodo(todoId));
+    }
+
+    updateTodo(todo: Todo): void {
+        this.store.dispatch(new UpdateTodo(todo));
+    }
+
+    deleteTodo(todoId: string): void {
+        this.store.dispatch(new DeleteTodo(todoId));
+    }
 }
