@@ -31,13 +31,17 @@ body {
   appearance: none;
   border: none;
   background-color: transparent;
-  padding: 1rem;
-  margin: 0 1rem;
+  padding: .4rem;
   border-radius: 1rem;
   transition: background-color 200ms ease;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (min-width: 576px) {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
 
   &:hover {
     cursor: pointer;
