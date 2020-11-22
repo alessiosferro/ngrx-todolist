@@ -1,18 +1,33 @@
 .todo {
   display: flex;
   flex-flow: column nowrap;
-  padding: 1.6rem 2.5rem;
+
+  @media (min-width: 576px) {
+    padding: 1.6rem 2.5rem;
+  }
 
   &-selected {
     padding: .8rem .6rem;
+  }
+
+  &-actions {
+    display: flex;
+  }
+
+  &-completed {
+    text-decoration: line-through;
   }
 
   &-controls {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 23rem;
-    margin-right: 4rem;
+    margin-right: 1rem;
+
+    @media (min-width: 768px) {
+      min-width: 23rem;
+      margin-right: 4rem;
+    }
   }
 
   &-container {

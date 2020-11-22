@@ -5,7 +5,7 @@
                    #editInput
                    class="form-control"
                    type="text"
-                   [ngClass]="{ 'todo-selected': selectedTodoId == todo.id }"
+                   [ngClass]="{ 'todo-selected': selectedTodoId == todo.id, 'todo-completed': todo.completed }"
                    name="title"
                    [ngModel]="todo.title"
             />
@@ -18,7 +18,7 @@
                    (click)="updateTodo({ id: todo.id, title: todo.title, completed: completed.checked })"
             />
         </div>
-        <div>
+        <div class="todo-actions">
             <button type="button"
                     (click)="selectTodo(todo.id)"
                     *ngIf="selectedTodoId !== todo.id"
