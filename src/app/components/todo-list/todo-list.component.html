@@ -1,0 +1,12 @@
+<div class="todo-list">
+    <h1 class="title">NGRX Todo List</h1>
+    <div class="todo-list-container">
+        <app-todo-list-item
+                *ngFor="let todo of todos"
+                [todo]="todo"
+                [selectedTodoId]="selectedTodoId"
+        ></app-todo-list-item>
+    </div>
+    <h2 class="todo-completed">Todos completed: <strong>{{ completedTodosCount }}</strong></h2>
+    <app-add-todo></app-add-todo>
+</div>
