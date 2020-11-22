@@ -1,0 +1,16 @@
+.add-todo {
+  &-title {
+    margin-bottom: 1rem;
+  }
+
+  &-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &-container {
+    flex-grow: 2;
+    margin-right: 2rem;
+  }
+}

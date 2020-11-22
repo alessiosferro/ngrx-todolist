@@ -75,12 +75,6 @@ export class TodosEffects {
     );
 
     @Effect()
-    unselectTodo$ = this.actions.pipe(
-        ofType(TodosActionTypes.TodoUpdated),
-        map(() => new SelectTodo(null))
-    );
-
-    @Effect()
     deleteTodo$ = this.actions.pipe(
         ofType(TodosActionTypes.DeleteTodo),
         concatMap(({ payload: todoId }) => {

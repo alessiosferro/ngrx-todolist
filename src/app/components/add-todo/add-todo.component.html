@@ -1,0 +1,9 @@
+<h3 class="add-todo-title">Add new todo</h3>
+<form class="add-todo-form" (ngSubmit)="addTodo(input)">
+    <div class="add-todo-container">
+        <input placeholder="Insert todo title..." class="form-control" id="add-todo-title" type="text" name="todoTitle" #input/>
+    </div>
+    <button type="submit" class="icon-button">
+        <span class="material-icons">save</span>
+    </button>
+</form>

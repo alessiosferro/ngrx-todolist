@@ -8,10 +8,16 @@ import {EffectsModule} from "@ngrx/effects";
 import {TodosEffects} from "./state/todos/todos.effects";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {FormsModule} from "@angular/forms";
+import { TodoListComponent } from './components/todo-list/todo-list.component';
+import { TodoListItemComponent } from './components/todo-list-item/todo-list-item.component';
+import { AddTodoComponent } from './components/add-todo/add-todo.component';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        TodoListComponent,
+        TodoListItemComponent,
+        AddTodoComponent
     ],
     imports: [
         FormsModule,

@@ -1,5 +1,5 @@
-import {Todos} from "./todo.model";
+import {TodosState} from "../state/todos/todos.reducer";
 
 export interface AppState {
-    todos: Todos;
+    todos: TodosState;
 }
